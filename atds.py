@@ -146,6 +146,15 @@ class UnorderedListStack(object):
         return self.uls.length()
     def is_empty(self):
         return self.uls.is_empty()
+    
+class LinearSearcher():
+    def search(self, list, num):
+        for i in range(len(list)):
+            if list[i] == num:
+                return i
+        return None
+        
+        
 class HashTable(object):
     def __init__(self, m):
         self.m = m
