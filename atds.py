@@ -156,7 +156,7 @@ class LinearSearcher():
 class BinarySearcher():
     def search(self, list, num):
         low = 0
-        high = len(list)
+        high = len(list)-1
         while low <= high:
             middle = (low + high)//2
             if list[middle] == num:
