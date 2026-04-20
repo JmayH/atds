@@ -153,8 +153,11 @@ class LinearSearcher():
             if list[i] == num:
                 return i
         return None
+class BinarySearcher():
+    def search(self, list, num):
         
         
+'''     
 class HashTable(object):
     def __init__(self, m):
         self.m = m
@@ -178,7 +181,7 @@ class HashTable(object):
             
     def __repr__(self):
         return self.keys + "\n" + self.values
-        
+ '''       
                 
 def main():
     tests_passed = 0
