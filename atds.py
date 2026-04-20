@@ -168,31 +168,35 @@ class BinarySearcher():
         return None
         
         
-'''     
+ 
 class HashTable(object):
     def __init__(self, m):
         self.m = m
         self.keys = m * [None]
         self.values = m *[None]
+        self.entries = 0
         
     def hash_function(self, key, m):
         return key % m
-    
+    def __len__(self):
+        return self.entries
     def put(self, key, value):
         hash = self.hash_function(key, self.m)
         while self.keys[hash] != None and self.keys[hash] != key:
             hash = (hash + 1) % self.m 
-        self.keys[hash] = key
-        self.values[hash] = value
         if self.keys[hash] == None:
             self.entries += 1
+        self.keys[hash] = key
+        self.values[hash] = value
+       
     def get(self,key):
         hash = self.hash_function(key,self.m)
         while self.keys[hash] != None and self.keys[hash] != key:
-            
+            hash = (hash + 1) % self.m
+        return self.values[hash]
     def __repr__(self):
-        return self.keys + "\n" + self.values
- '''       
+        return str(self.keys) + "\n" + str(self.values)
+     
                 
 def main():
     tests_passed = 0
