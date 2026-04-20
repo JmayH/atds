@@ -158,7 +158,7 @@ class BinarySearcher():
         low = 0
         high = len(list)
         while low <= high:
-            middle = (low + high)/2
+            middle = (low + high)//2
             if list[middle] == num:
                 return middle
             elif num <= list[middle]:
