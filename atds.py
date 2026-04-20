@@ -155,6 +155,17 @@ class LinearSearcher():
         return None
 class BinarySearcher():
     def search(self, list, num):
+        low = 0
+        high = len(list)
+        while low <= high:
+            middle = (low + high)/2
+            if list[middle] == num:
+                return middle
+            elif num <= list[middle]:
+                high = middle-1
+            else:
+                low = middle + 1
+        return None
         
         
 '''     
