@@ -259,8 +259,61 @@ class HashTable(object):
         return self.values[hash]
     def __repr__(self):
         return str(self.keys) + "\n" + str(self.values)
-     
+   
+
+class Vertex(object):
+    
+    def __init__(self, key):
+        self.id = key
+        self.connected_to = {} 
+
+    def add_neighbor(self, neighbor_vertex, weight=0):
+        self.connected_to[neighbor_vertex] = weight
+
+    def __repr__(self):
+        return str(self.id) + ' connected_to: ' + str([x.id for x in self.connected_to])
+
+    def get_connections(self):
+        return self.connected_to.keys()
+
+    def get_id(self):
+        return self.id
+
+    def get_weight(self, neighbor_vertex):
+        return self.connected_to[neighbor_vertex]  
                 
+class Graph(object):
+
+    def __init__(self):
+        self.vertex_dict = {}  
+
+    def add_vertex(self, key):
+        new_vertex = Vertex(key)
+        self.vertex_dict[key] = new_vertex
+        return new_vertex
+
+    def get_vertex(self, key):
+        return self.vertex_dict.get(key, None)
+
+    def __contains__(self, key):
+        return key in self.vertex_dict
+
+    def add_edge(self, from_vertex, to_vertex, weight=0):
+        if from_vertex not in self.vertex_dict:
+            self.add_vertex(from_vertex)
+        if to_vertex not in self.vertex_dict:
+            self.add_vertex(to_vertex)
+
+        self.vertex_dict[from_vertex].add_neighbor(
+            self.vertex_dict[to_vertex], weight
+        )
+
+    def get_vertices(self):
+        return self.vertex_dict.keys()
+
+    def __iter__(self):
+        return iter(self.vertex_dict.values())
+    
 def main():
     tests_passed = 0
     print("\nTEST: Creating HashTable(11)...")

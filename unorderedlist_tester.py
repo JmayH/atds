@@ -28,7 +28,7 @@ better diagnostics for your debugging pleasure. :)
 @version 2023-02-23 (modified)
 """
 
-from atds import UnorderedList         # Uses the UnorderedList and Node classes
+from atds import *          # Uses the UnorderedList and Node classes
 # from unorderedlist_class import *
 
 def main():
