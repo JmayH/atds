@@ -260,7 +260,45 @@ class HashTable(object):
     def __repr__(self):
         return str(self.keys) + "\n" + str(self.values)
    
+class BinaryTree:
+    def __init__(self, key):
+        self.root_val = key
+        self.left_child = None
+        self.right_child = None
 
+    def get_root_val(self):
+        return self.root_val
+
+    def set_root_val(self, new_val):
+        self.root_val = new_val
+
+    def get_left_child(self):
+        return self.left_child
+
+    def get_right_child(self):
+        return self.right_child
+
+    def insert_left(self, new_left_child):
+        new_tree = BinaryTree(new_left_child)
+        if self.left_child != None:
+            new_tree.left_child = self.left_child
+        self.left_child = new_tree
+
+    def insert_right(self, new_right_child):
+        new_tree = BinaryTree(new_right_child)
+        if self.right_child != None:
+            new_tree.right_child = self.right_child
+        self.right_child = new_tree
+
+    def __str__(self):
+        left = str(self.left_child)
+        if self.left_child == None:
+            left = "None"
+        right = str(self.right_child)
+        if self.right_child == None:
+            right = "None"
+        return f"BinaryTree({self.root_val}, {left}, {right})"
+    
 class Vertex(object):
     """Describes a vertex object in terms of a "key" and a
     dictionary that indicates edges to neighboring vertices with
@@ -383,123 +421,112 @@ class Graph(object):
             print(vertex)
         """
         return iter(self.vertices.values())
-    
+
+class BinaryHeap():
+
+    def __init__(self):
+        self.heap_list = [0]
+        
+    def insert(self, value):
+        self.heap_list.append(value)
+        self.percolate_up(self.size())
+
+    def percolate_up(self, i):
+        while i // 2 > 0:
+            parent = i // 2
+            if self.heap_list[i] < self.heap_list[parent]:
+                self.heap_list[i], self.heap_list[parent] = self.heap_list[parent], self.heap_list[i]
+            i = parent
+
+    def del_min(self):
+        if self.is_empty():
+            return None
+        min_value = self.heap_list[1]
+        self.heap_list[1] = self.heap_list[-1]
+        self.heap_list.pop()
+        if not self.is_empty():
+            self.percolate_down(1)
+
+        return min_value
+
+    def percolate_down(self, i):
+        while i * 2 <= self.size():
+            min_child = self.min_child(i)
+
+            if self.heap_list[i] > self.heap_list[min_child]:
+                self.heap_list[i], self.heap_list[min_child] = \
+                    self.heap_list[min_child], self.heap_list[i]
+
+            i = min_child
+
+    def min_child(self, i):
+        left_child = i * 2
+        right_child = i * 2 + 1
+
+        if right_child > self.size():
+            return left_child
+        else:
+            if self.heap_list[left_child] < self.heap_list[right_child]:
+                return left_child
+            else:
+                return right_child
+
+    def find_min(self):
+        if self.is_empty():
+            return None
+        return self.heap_list[1]
+
+    def is_empty(self):
+        return len(self.heap_list) - 1 == 0
+
+    def size(self):
+        return len(self.heap_list) - 1
+
+    def build_heap(self, list_of_keys):
+        self.heap_list = [0] + list_of_keys[:]
+
+        i = self.size() // 2
+
+        while i > 0:
+            self.percolate_down(i)
+            i -= 1
+
+    def __repr__(self):
+        return "BinaryHeap" + str(self.heap_list)
+
+
 def main():
-    tests_passed = 0
-    print("\nTEST: Creating HashTable(11)...")
-    try:
-        h = HashTable(11)
-        tests_passed += 1
-        print("SUCCESS. Table created.")
-    except:
-        print("FAIL. Table not created.")
-    
-    print("\nTEST: Using put function to store key-value pairs in table...")
-    try:
-        h.put(1, "a")
-        h.put(6, "e")
-        h.put(10, "f")
-        h.put(12, "b")
-        h.put(23, "c")
-        tests_passed += 1
-        print("SUCCESS. .put() method called with 5 values.")
-    except:
-        print("FAIL. Problem with .put() method.")
-    
-    print("\nTEST: Trying to print the current state of table...")
-    try:
-        print(h)
-        print("Should look something like:")
-        print("Keys:   [None, 1, 12, 23, None, None, 6, None, None, None, 10]")
-        print("Values: [None, 'a', 'b', 'c', None, None, 'e', None, None, None, 'f']")
-        tests_passed += 1
-    except:
-        print("FAIL. Couldn't print using __str__ or __repr__")
-    
-    print("\nTEST: Using put() for a function at the end of the table to see if it wraps around...")
-    try:
-        h.put(21, "g")
-        if h.get(21) == "g":
-            print("SUCCESS. .put() correctly wrapped in the table.")
-            tests_passed += 1
-        else:
-            print("FAIL. .put() wraparound didn't work.")
-        print(h)
-    except:
-        print("FAIL. .put() didn't correctly wrap the table in linear probe.")
-    
-    print("\nTEST: Checking the number of values in the hash table...")
-    try:
-        l = len(h)
-        if l == 6:
-            print("SUCCESS. len(h) is 6.")
-            tests_passed += 1
-        else:
-            print("FAIL. len(h) should have been 5 -- solution is to write a __len__ method.")
-    except:
-        print("FAIL. Problem with len() method.")
-    
-    print("\nTEST: Looking for original hash in table...")
-    try:
-        result = h.get(10)
-        tests_passed += 1
-        print("SUCCESS. .get() method called.")
-        if result == "f":
-            tests_passed += 1
-            print("SUCCESS. Correct value returned.")
-        else:
-            print("FAIL. Incorrect value returned.")
-    except:
-        print("FAIL. Problem with .get() method.")
-    
-    print("\nTEST: Replacing original hash {1, 'a'} in table with {1, 'z'}...")
-    try:
-        h.put(1, "z")
-        result = h.get(1)
-        if result == "z":
-            print("SUCCESS. New value put and found.")
-            tests_passed += 1
-        else:
-            print("FAIL. New value not put/found.")
-    except:
-        print("FAIL. Problem with replacing an old key.")
-    
-    print("\nTEST: Looking for key-collision in table...")
-    try:
-        result = h.get(23)
-        tests_passed += 1
-        print("SUCCESS. .get() method called.")
-        if result == "c":
-            tests_passed += 1
-            print("SUCCESS. Correct value returned.")
-        else:
-            print("FAIL. Incorrect value returned.")
-    except:
-        print("FAIL. Problem with .get() finding a key-collision.")
-    
-    print("\nTEST: Looking for a hash that's not in table..")
-    try:
-        result = h.get(14)
-        if result == None:
-            tests_passed += 1
-            print("SUCCESS. Non-existent value not found.")
-        else:
-            print("FAIL. Non-existent value found.")
-    except:
-        print("FAIL. Problem with .get() method.")
-    
-    print("\nTEST: Looking for collision not in table...")
-    try:
-        result = h.get(45)
-        if result == None:
-            tests_passed += 1
-            print("SUCCESS. Non-existent collision not found.")
-        else:
-            print("FAIL. Non-existent collision found.")
-    except:
-        print("FAIL. Problem with .get() method.")
-    
-    print("\nResults:")
-    print(tests_passed,"/ 12 tests passed")
+    print("Demonstrating minHeap binary tree")
+
+    bh = BinaryHeap()
+
+    bh.insert(5)
+    bh.insert(7)
+    bh.insert(3)
+    bh.insert(11)
+    bh.insert(1)
+    bh.insert(50)
+    bh.insert(15)
+
+    print("Heap after insertions:")
+    print(bh)
+
+    print("Minimum value:")
+    print(bh.find_min())
+
+    print("Deleted minimum:")
+    print(bh.del_min())
+
+    print("Heap after deleting minimum:")
+    print(bh)
+
+    print("\nBuilding heap from list:")
+    bh2 = BinaryHeap()
+    bh2.build_heap([9, 5, 6, 2, 3])
+
+    print(bh2)
+    print("Minimum value:")
+    print(bh2.find_min())
+
 if __name__ == "__main__":
     main()
